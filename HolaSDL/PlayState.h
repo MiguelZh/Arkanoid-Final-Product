@@ -5,6 +5,7 @@
 #include "Ball.h"
 #include "Paddle.h"
 #include "PauseState.h"
+#include "BlocksMap.h"
 class PlayState : public GameState
 {
 protected:
@@ -13,6 +14,7 @@ protected:
 		*wallIzq = nullptr;
 	Ball* ball = nullptr;
 	Paddle* paddle = nullptr;
+	BlocksMap* blocksmap = nullptr;
 	int vidas = 3;
 public:
 	PlayState(SDLApplication * app);

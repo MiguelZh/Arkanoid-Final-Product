@@ -9,7 +9,8 @@ PlayState::PlayState(SDLApplication* app) : GameState(app)
 	wallIzq = new Wall(15, WIN_HEIGHT, Vector2D(0, 0), app->getTexture(app->sideWallText), "Left");
 	ball = new Ball(20, 20, Vector2D(400, 500), app->getTexture(app->ballText), { 0, -4 }, this);
 	paddle = new Paddle(75, 15, Vector2D(270, 550), app->getTexture(app->paddleText), {0,0});
-
+	blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
+	blocksmap->LeerFichero("..//maps//level01.ark", false);
 	rellenaLista();
 }
 
@@ -29,6 +30,7 @@ void PlayState::rellenaLista()
 	objects_.push_back(wallIzq);
 	objects_.push_back(ball);
 	objects_.push_back(paddle);
+	objects_.push_back(blocksmap);
 }
 
 bool PlayState::handleEvents(SDL_Event & e)

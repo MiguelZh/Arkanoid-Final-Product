@@ -24,11 +24,11 @@ bool Paddle::handleEvent(SDL_Event & e)
 		switch (e.key.keysym.sym)
 		{
 		case SDLK_LEFT:
-			paddleSpeed = -3;
+			paddleSpeed = -5;
 			handled = true;
 			break;
 		case SDLK_RIGHT:
-			paddleSpeed = 3;
+			paddleSpeed = 5;
 			handled = true;
 			break;		
 		}
