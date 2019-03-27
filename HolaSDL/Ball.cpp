@@ -1,6 +1,6 @@
 #include "Ball.h"
 #include "PlayState.h"
-
+#include "SDLApplication.h"
 
 Ball::Ball()
 {
@@ -33,10 +33,10 @@ void Ball::update()
 		velocidad = velocidad - (collVector * (2 * (velocidad*collVector)));
 		coord = prevPos + velocidad;
 	}
-	if (coord.getY() > 600 + 100 && playstate_->getVidas()> 0) {	// Cambiar valor inmediato o mover bloque a playState
+	if (coord.getY() > WIN_HEIGHT && playstate_->getVidas()> 0) {	// Cambiar valor inmediato o mover bloque a playState
+		playstate_->pierdeVida();
 		coord = iniCoord;
 		velocidad = iniVel;
-		playstate_->pierdeVida();
 	}
 }
 

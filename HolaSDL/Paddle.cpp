@@ -30,29 +30,18 @@ bool Paddle::handleEvent(SDL_Event & e)
 		case SDLK_RIGHT:
 			paddleSpeed = 3;
 			handled = true;
-			break;
+			break;		
 		}
 	}
+	else paddleSpeed = 0;
 
-	if (e.type == SDL_KEYUP) {
-		switch (e.key.keysym.sym)
-		{
-		case SDLK_LEFT:
-			paddleSpeed = 0;
-			handled = true;
-			break;
-		case SDLK_RIGHT:
-			paddleSpeed = 0;
-			handled = true;
-			break;
-		}
-	}
 	return handled;
 }
 
 void Paddle::update()
 {
-	if (coord.getX() > 25 - paddleSpeed && coord.getX() < WIN_WIDTH - w - paddleSpeed - 25) {	// ELIMINAR VALORES ESTATICOS
+	// comprueba ambos lados del mapa
+	if (coord.getX() > 25 - paddleSpeed && coord.getX() < WIN_WIDTH - w - paddleSpeed - 25) {
 		coord = {coord.getX() + paddleSpeed, coord.getY()};
 	}
 }
