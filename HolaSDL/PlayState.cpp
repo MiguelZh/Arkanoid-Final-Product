@@ -1,7 +1,7 @@
 #include "PlayState.h"
 #include <time.h>
 #include <stdlib.h>
-
+#include "GameObject.h"
 
 PlayState::PlayState(SDLApplication* app) : GameState(app)
 {
@@ -69,9 +69,16 @@ void PlayState::addRewardToList(Vector2D coord)
 	reward = nullptr;
 }
 
-void PlayState::restruyeReward()
+void PlayState::destruyeReward(Reward * r)
 {
-
+	list<GameObject*>::iterator it = objects_.begin;
+	bool found = false;
+	while (!found && *it != objects_.end) {
+		if (static_cast<Reward*>(*it) == r) {
+			delete *it;
+			found = true;
+		}
+	}
 }
 
 void PlayState::pierdeVida()

@@ -1,18 +1,18 @@
 #include "Reward.h"
 #include "PlayState.h"
+#include "SDLApplication.h"
 
-
-Reward::Reward(uint width, uint height, Vector2D coord, Texture * t, Vector2D vel, uint type, PlayState * p):
+Reward::Reward(uint width, uint height, Vector2D coord, Texture * t, Vector2D vel, uint type, PlayState * p, Paddle * paddle):
 	MovingObject(width,height,coord,t, vel)
 {
 	rewardType = type;
 	playState_ = p;
+	paddle_ = paddle;
 }
 
 Reward::~Reward()
 {
 	playState_ = nullptr;
-	ball_ = nullptr;
 }
 
 void Reward::render()
@@ -30,6 +30,13 @@ void Reward::render()
 void Reward::update()
 {
 	coord = coord + velocidad;
+	if (getY() > WIN_HEIGHT + 100) {
+		playState_->destruyeReward(this);
+	}
+	if (SDL_HasIntersection(&getRect(), &paddle_->getRect()))
+	{
+
+	}
 }
 
 void Reward::tipoRecompensa()

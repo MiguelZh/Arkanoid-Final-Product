@@ -30,7 +30,7 @@ public:
 	bool collides(const SDL_Rect destRect, Vector2D &collVector, const Vector2D &vel);
 
 	void addRewardToList(Vector2D coord);
-	void restruyeReward();
+	void destruyeReward(Reward * r);
 	void pierdeVida();
 	void ganaVida();
 	void pasaNivel();
