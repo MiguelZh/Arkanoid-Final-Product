@@ -38,3 +38,29 @@ bool GameState::handleEvents(SDL_Event& e) {
 	}
 	return handled;
 }
+
+void GameState::destroy()
+{
+	for (auto gameObject : pendingOnDestroy_) {
+		// If the gameObject was already deleted from memory,
+		// skip this search
+		if (gameObject == nullptr) continue;
+
+		auto it = objects_.begin();
+		while (it != objects_.end()) {
+			if (*it == gameObject) {
+				objects_.erase(it);
+				delete gameObject;
+				break;
+			}
+			++it;
+		}
+	}
+
+	pendingOnDestroy_.clear();
+}
+
+void GameState::removeGameObject(GameObject * gameObject)
+{
+	pendingOnDestroy_.push_back(gameObject);
+}

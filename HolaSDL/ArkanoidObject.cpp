@@ -27,6 +27,7 @@ void ArkanoidObject::renderFrame(uint row, uint col)
 
 void ArkanoidObject::update()
 {
+
 }
 
 bool ArkanoidObject::handleEvent(SDL_Event & e)

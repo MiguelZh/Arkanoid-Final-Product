@@ -35,9 +35,14 @@ void Ball::update()
 	}
 	if (coord.getY() > WIN_HEIGHT && playstate_->getVidas()> 0) {	// Cambiar valor inmediato o mover bloque a playState
 		playstate_->pierdeVida();
-		coord = iniCoord;
-		velocidad = iniVel;
+		setIni();
 	}
+}
+
+void Ball::setIni()
+{
+	coord = iniCoord;
+	velocidad = iniVel;
 }
 
 

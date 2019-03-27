@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "GameObject.h"
-
+#include "SDLApplication.h"
 PlayState::PlayState(SDLApplication* app) : GameState(app)
 {
 	wallTop = new Wall(WIN_WIDTH + 30, 15, Vector2D(-15, 0), app->getTexture(app->upperWallText), "Top");
@@ -11,7 +11,7 @@ PlayState::PlayState(SDLApplication* app) : GameState(app)
 	ball = new Ball(20, 20, Vector2D(400, 500), app->getTexture(app->ballText), { 0, -3 }, this);
 	paddle = new Paddle(75, 15, Vector2D(270, 550), app->getTexture(app->paddleText), {0,0});
 	blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
-	blocksmap->LeerFichero("..//maps//level03.ark", false);
+	blocksmap->LeerFichero(nivelesJuego[nivelActual], false);
 	rellenaLista();
 }
 
@@ -64,20 +64,21 @@ void PlayState::addRewardToList(Vector2D coord)
 {
 	srand(time(NULL));
 	int type = rand() % 4;
-	reward = new Reward(50, 30,coord, app->getTexture(app->rewardText), Vector2D(0, 2), type, this);
+	reward = new Reward(50, 30,coord, app->getTexture(app->rewardText), Vector2D(0, 2), type, this, paddle);
 	objects_.push_back(reward);
 	reward = nullptr;
 }
 
 void PlayState::destruyeReward(Reward * r)
 {
-	list<GameObject*>::iterator it = objects_.begin;
+	list<GameObject*>::iterator it = objects_.begin();
 	bool found = false;
-	while (!found && *it != objects_.end) {
+	while (!found && (it) != objects_.end()) {
 		if (static_cast<Reward*>(*it) == r) {
-			delete *it;
+			removeGameObject(*it);
 			found = true;
 		}
+		else it++;
 	}
 }
 
@@ -93,7 +94,17 @@ void PlayState::ganaVida()
 
 void PlayState::pasaNivel()
 {
+	if (nivelActual < nivelesJuego->size()) {
+		ball->setIni();
+		nivelActual++;
+		removeGameObject(blocksmap);
+		blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
+		blocksmap->LeerFichero(nivelesJuego[nivelActual], false);
+		objects_.push_back(blocksmap);
+	}
+	else {
 
+	}
 }
 
 void PlayState::alargarPaddle()

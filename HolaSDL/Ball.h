@@ -13,5 +13,6 @@ public:
 	Ball(uint ancho, uint alto, Vector2D coord, Texture * textura, Vector2D vel, PlayState * p);
 	virtual ~Ball();
 	void update();
+	void setIni();
 };
 

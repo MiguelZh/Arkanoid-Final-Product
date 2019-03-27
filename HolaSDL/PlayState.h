@@ -7,6 +7,7 @@
 #include "PauseState.h"
 #include "BlocksMap.h"
 #include "Reward.h"
+using namespace std;
 class PlayState : public GameState
 {
 protected:
@@ -18,6 +19,9 @@ protected:
 	BlocksMap* blocksmap = nullptr;
 	Reward * reward = nullptr;
 	int vidas = 3;
+
+	int nivelActual = 0;
+	string nivelesJuego[3] = { "..//maps//level01.ark","..//maps//level02.ark","..//maps//level03.ark" };
 public:
 	PlayState(SDLApplication * app);
 	//PlayState(SDLApplication* app, string filename); TODO

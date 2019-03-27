@@ -30,12 +30,15 @@ void Reward::render()
 void Reward::update()
 {
 	coord = coord + velocidad;
-	if (getY() > WIN_HEIGHT + 100) {
+	if (getY() > WIN_HEIGHT + 100 && this != nullptr) {
 		playState_->destruyeReward(this);
 	}
-	if (SDL_HasIntersection(&getRect(), &paddle_->getRect()))
-	{
-
+	else if(getY() < WIN_HEIGHT) {
+		if (SDL_HasIntersection(&getRect(), &paddle_->getRect()))
+		{
+			tipoRecompensa();
+			playState_->destruyeReward(this);
+		}
 	}
 }
 

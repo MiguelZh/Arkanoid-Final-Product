@@ -50,6 +50,7 @@ void SDLApplication::run()
 		handleEvents();
 		update();
 		render();
+		destroy();
 	}
 }
 void SDLApplication::render() {
@@ -72,6 +73,11 @@ void SDLApplication::update()
 	if (frameTime < FRAME_RATE) {
 		SDL_Delay(FRAME_RATE - frameTime);
 	}
+}
+
+void SDLApplication::destroy()
+{
+	stateMachine->getCurrentState()->destroy();
 }
 
 void SDLApplication::handleEvents()

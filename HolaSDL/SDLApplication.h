@@ -39,6 +39,7 @@ public:
 	void run();
 	void render();
 	void update();
+	void destroy();
 	void handleEvents();
 	Texture * getTexture(int num);
 	GameStateMachine * getStateMachine();
