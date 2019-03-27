@@ -28,6 +28,12 @@
     <Filter Include="Archivos de código fuente\ArkanoidObjects">
       <UniqueIdentifier>{6aa45c1a-a698-4e74-aa38-ba9b92a1366d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\RenderFrameObjects">
+      <UniqueIdentifier>{c693b1ea-374d-43dc-ba6d-8cc85938dd38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de código fuente\RenderFrameObjects">
+      <UniqueIdentifier>{833adb7e-2b77-4cc9-82ce-63a8fce98c65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -80,6 +86,9 @@
     </ClCompile>
     <ClCompile Include="Reward.cpp">
       <Filter>Archivos de código fuente\ArkanoidObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Block.cpp">
+      <Filter>Archivos de código fuente\RenderFrameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="Reward.h">
       <Filter>Archivos de encabezado\ArkanoidObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Archivos de encabezado\RenderFrameObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
