@@ -6,9 +6,7 @@ class BlocksMap : public ArkanoidObject
 {
 private:
 	Block *** blocks = nullptr;
-	uint numBloques,
-		puntos = 0,
-		puntosAnt = 0;
+	uint numBloques;
 	int fila = 0,
 		columna = 0;
 public:
@@ -21,5 +19,7 @@ public:
 	Block* blockAt(const Vector2D& p);
 	void LeerFichero(string filename, bool load);
 	void ballHitBlock(Block * bloque);
+	int getBloques();
+	void saveToFile(ofstream& file);
 };
 

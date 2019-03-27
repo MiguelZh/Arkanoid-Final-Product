@@ -15,6 +15,30 @@ PlayState::PlayState(SDLApplication* app) : GameState(app)
 	rellenaLista();
 }
 
+PlayState::PlayState(SDLApplication * app, string filename) : GameState(app)
+{
+	ifstream file;
+	file.open("..\\saves\\" + filename + ".txt");
+	blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
+	blocksmap->LeerFichero("..\\saves\\" + filename + ".txt", true);
+	int a, b;
+	file >> a; file >> b;
+	ballIniVel = { (double)a ,(double)b };
+	file >> a; file >> b;
+	int c, d; file >> c; file >> d;
+	paddle = new Paddle(c, d, { (double)a,(double)b }, app->getTexture(app->paddleText), ballIniVel);
+	file >> a; file >> b;
+	ballIniVel = { (double)a ,(double)b };
+	file >> a; file >> b;
+	file >> c; file >> d;
+	ball = new Ball(20, 20, { (double)d,(double)c }, app->getTexture(app->ballText), ballIniVel, this);
+	wallTop = new Wall(WIN_WIDTH + 30, 15, Vector2D(-15, 0), app->getTexture(app->upperWallText), "Top");
+	wallDer = new Wall(15, WIN_HEIGHT, Vector2D(WIN_WIDTH - 15, 0), app->getTexture(app->sideWallText), "Right");
+	wallIzq = new Wall(15, WIN_HEIGHT, Vector2D(0, 0), app->getTexture(app->sideWallText), "Left");
+	file.close();
+	rellenaLista();
+}
+
 
 PlayState::~PlayState()
 {
@@ -35,6 +59,13 @@ void PlayState::rellenaLista()
 	objects_.push_back(blocksmap);
 }
 
+
+void PlayState::update()
+{
+	GameState::update();
+	levelAcabado();
+}
+
 bool PlayState::handleEvents(SDL_Event & e)
 {
 	GameState::handleEvents(e);
@@ -42,8 +73,8 @@ bool PlayState::handleEvents(SDL_Event & e)
 		if (e.key.keysym.sym == SDLK_ESCAPE) {
 			app->getStateMachine()->pushState(new PauseState(app));
 		}
-		if (e.key.keysym.sym == SDLK_s) {
-			//saveGame();
+		if (e.key.keysym.sym == SDLK_s && e.type == SDL_KEYDOWN) {
+			saveGame();
 		}
 	}
 	return false;
@@ -52,7 +83,7 @@ bool PlayState::handleEvents(SDL_Event & e)
 
 bool PlayState::collides(const SDL_Rect destRect, Vector2D & collVector, const Vector2D & vel)
 {
-	if (blocksmap->detectCollision(destRect, collVector, vel, this)) return true;
+	if (blocksmap->detectCollision(destRect, collVector, vel, this)) { return true; addPoints(); }
 	if (wallDer->collides(destRect, collVector)) return true;
 	if (wallIzq->collides(destRect, collVector)) return true;
 	if (wallTop->collides(destRect, collVector)) return true;
@@ -84,6 +115,10 @@ void PlayState::destruyeReward(Reward * r)
 
 void PlayState::pierdeVida()
 {
+	if (vidas == 1 ) {
+		cout << "Has perdido!" << endl;
+		//app->getStateMachine()->changeState(new EndState(app));
+	}
 	vidas--;
 }
 
@@ -94,7 +129,7 @@ void PlayState::ganaVida()
 
 void PlayState::pasaNivel()
 {
-	if (nivelActual < nivelesJuego->size()) {
+	if (nivelActual < 3 ) {
 		ball->setIni();
 		nivelActual++;
 		removeGameObject(blocksmap);
@@ -103,10 +138,25 @@ void PlayState::pasaNivel()
 		objects_.push_back(blocksmap);
 	}
 	else {
-
+		cout << "Ganaste!";
+		//app->getStateMachine()->changeState(new EndState(app));
 	}
 }
-
+void PlayState::levelAcabado()
+{
+	if (blocksmap->getBloques() == 0 && nivelActual < 3) {
+		ball->setIni();
+		nivelActual++;
+		removeGameObject(blocksmap);
+		blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
+		blocksmap->LeerFichero(nivelesJuego[nivelActual], false);
+		objects_.push_back(blocksmap);
+	}
+	else {
+		cout << "Ganaste!";
+		//app->getStateMachine()->changeState(new EndState(app));
+	}
+}
 void PlayState::alargarPaddle()
 {
 	paddle->resetWidth();
@@ -127,4 +177,26 @@ void PlayState::resetPaddle()
 int PlayState::getVidas()
 {
 	return vidas;
+}
+
+void PlayState::addPoints()
+{
+	puntos++;
+}
+
+
+void PlayState::saveGame()
+{
+	system("cls");
+	cout << "Escribe el nombre del archivo: " << endl;
+	string nombre;
+	cin >> nombre;
+	string filename = "..\\saves\\" + nombre + ".txt";
+	ofstream file(filename, ofstream::trunc); // borra todo lo que ya este guardado, si existe un archivo igual
+	// tamaño paddle, bola,walltop,wallder,wallizq,mapa
+	for (auto *n : objects_) {
+		ArkanoidObject * object = static_cast<ArkanoidObject*>(n);
+		object->saveToFile(file);
+	}
+	file.close();
 }

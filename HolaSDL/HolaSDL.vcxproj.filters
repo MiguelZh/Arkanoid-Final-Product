@@ -93,6 +93,9 @@
     <ClCompile Include="BlocksMap.cpp">
       <Filter>Archivos de código fuente\RenderFrameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="EndState.cpp">
+      <Filter>Archivos de código fuente\RenderFrameObjects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SDLApplication.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="BlocksMap.h">
       <Filter>Archivos de encabezado\RenderFrameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="EndState.h">
+      <Filter>Archivos de encabezado\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -117,12 +117,12 @@ void BlocksMap::LeerFichero(string filename, bool load) {
 	lectura.open(filename);
 	if (!lectura.is_open()) throw "No existe el fichero";
 	int aux;
-	/*if (load == true) {
+	if (load == true) {
 		for (int i = 0; i < 24; i++) {
 
 			lectura >> aux;
 		}
-	}*/
+	}
 	lectura >> fila; // row
 	lectura >> columna; // col
 	numBloques = 0;
@@ -137,7 +137,6 @@ void BlocksMap::LeerFichero(string filename, bool load) {
 	int cellW = (w - margen * 2) / columna, cellH = (w - fila) / 20; int cellWAux = cellW; // tamaño fijo de las celdas, depende de la anchura del mapa
 	for (uint i = 0; i < fila; i++) {
 		for (uint j = 0; j < columna; j++) {
-
 			Vector2D pos(margen + j * cellWAux, margen + i * cellH);
 			lectura >> color;
 			blocks[j][i] = new Block(color, cellW, cellH, pos, texture, i, j);
@@ -157,8 +156,11 @@ void BlocksMap::ballHitBlock(Block * bloque) {
 		delete bloque;
 		blocks[j][i] = nullptr;
 		numBloques--;
-		puntos++;
 	}
+}
+int BlocksMap::getBloques()
+{
+	return numBloques;
 }
 void BlocksMap::render() {
 	for (int i = 0; i < fila; i++) {
@@ -167,5 +169,17 @@ void BlocksMap::render() {
 				blocks[j][i]->render();
 			}
 		}
+	}
+}
+void BlocksMap::saveToFile(ofstream& file) {
+	file << fila << " " << columna << " " << endl;
+	for (int x = 0; x < fila; x++) {
+		for (int y = 0; y < columna; y++) {
+			if (blocks[y][x] != nullptr) {
+				file << blocks[y][x]->getColor() << " ";
+			}
+			else file << "0" << " ";
+		}
+		file << endl;
 	}
 }

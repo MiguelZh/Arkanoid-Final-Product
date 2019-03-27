@@ -38,5 +38,8 @@ void MainMenuState::onHitEndButton(SDLApplication* app) {
 }
 
 void MainMenuState::onHitLoadButton(SDLApplication* app) {
-	//pendiente
+	cout << " Nombre del archivo que quiere cargar: " << endl;
+	string filename;
+	cin >> filename;
+	app->getStateMachine()->changeState(new PlayState(app, filename));
 }
