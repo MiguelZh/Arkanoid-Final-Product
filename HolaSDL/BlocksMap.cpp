@@ -1,6 +1,6 @@
 #include "BlocksMap.h"
-
-
+#include "PlayState.h"
+#include <time.h>
 
 BlocksMap::BlocksMap(uint w, uint h, Texture * t) :
 	ArkanoidObject(w ,h ,{0,0} ,t )
@@ -80,6 +80,25 @@ Block * BlocksMap::collides(const SDL_Rect & ballRect, const Vector2D & ballVel,
 	return b;
 }
 
+bool BlocksMap::detectCollision(const SDL_Rect destRect, Vector2D & collVector, const Vector2D & vel, PlayState * p)
+{
+	if (SDL_HasIntersection(&destRect, &getRect())) {
+		Block* block = collides(destRect, vel, collVector);
+		if (block != nullptr) {
+			if (block->getColor() != 0) {
+				srand(time(NULL));
+				int probabilidad = rand() % 10 + 1;
+				if (probabilidad < 5) {
+					p->addRewardToList(Vector2D(destRect.x, destRect.y)); // poner random aqui
+				}
+				ballHitBlock(block);
+				//puntuacion();
+				return true;
+			}
+		}
+	}
+}
+
 Block * BlocksMap::blockAt(const Vector2D & p)
 {
 	for (int i = 0; i < fila; i++) {
@@ -130,6 +149,17 @@ void BlocksMap::LeerFichero(string filename, bool load) {
 	lectura.close();
 }
 
+void BlocksMap::ballHitBlock(Block * bloque) {
+
+	int i = bloque->getRow();
+	int j = bloque->getCol();
+	if (blocks[j][i] != nullptr) {
+		delete bloque;
+		blocks[j][i] = nullptr;
+		numBloques--;
+		puntos++;
+	}
+}
 void BlocksMap::render() {
 	for (int i = 0; i < fila; i++) {
 		for (int j = 0; j < columna; j++) {

@@ -6,6 +6,7 @@
 #include "Paddle.h"
 #include "PauseState.h"
 #include "BlocksMap.h"
+#include "Reward.h"
 class PlayState : public GameState
 {
 protected:
@@ -15,6 +16,7 @@ protected:
 	Ball* ball = nullptr;
 	Paddle* paddle = nullptr;
 	BlocksMap* blocksmap = nullptr;
+	Reward * reward = nullptr;
 	int vidas = 3;
 public:
 	PlayState(SDLApplication * app);
@@ -27,6 +29,8 @@ public:
 
 	bool collides(const SDL_Rect destRect, Vector2D &collVector, const Vector2D &vel);
 
+	void addRewardToList(Vector2D coord);
+	void restruyeReward();
 	void pierdeVida();
 	void ganaVida();
 	void pasaNivel();

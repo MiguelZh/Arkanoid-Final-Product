@@ -27,6 +27,11 @@ void Reward::render()
 	renderFrame(rewardType, animationFrame);
 }
 
+void Reward::update()
+{
+	coord = coord + velocidad;
+}
+
 void Reward::tipoRecompensa()
 {
 	switch (rewardType)

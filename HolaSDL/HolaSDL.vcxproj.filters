@@ -84,14 +84,14 @@
     <ClCompile Include="PauseState.cpp">
       <Filter>Archivos de código fuente\States</Filter>
     </ClCompile>
-    <ClCompile Include="Reward.cpp">
-      <Filter>Archivos de código fuente\ArkanoidObjects</Filter>
-    </ClCompile>
     <ClCompile Include="Block.cpp">
       <Filter>Archivos de código fuente\RenderFrameObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Reward.cpp">
+      <Filter>Archivos de código fuente\RenderFrameObjects</Filter>
+    </ClCompile>
     <ClCompile Include="BlocksMap.cpp">
-      <Filter>Archivos de código fuente</Filter>
+      <Filter>Archivos de código fuente\RenderFrameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,14 +146,14 @@
     <ClInclude Include="PauseState.h">
       <Filter>Archivos de encabezado\States</Filter>
     </ClInclude>
-    <ClInclude Include="Reward.h">
-      <Filter>Archivos de encabezado\ArkanoidObjects</Filter>
-    </ClInclude>
     <ClInclude Include="Block.h">
       <Filter>Archivos de encabezado\RenderFrameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Reward.h">
+      <Filter>Archivos de encabezado\RenderFrameObjects</Filter>
+    </ClInclude>
     <ClInclude Include="BlocksMap.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\RenderFrameObjects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
