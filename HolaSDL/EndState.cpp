@@ -4,9 +4,9 @@
 
 EndState::EndState(SDLApplication * app) : GameState(app)
 {
-	endButton = new MenuButton(150, 350, 100, 50, app->getTexture(app->quitBText), app, onHitEndButton);
+	endButton = new MenuButton(200, 350, 100, 50, app->getTexture(app->quitBText), app, onHitEndButton);
 	objects_.push_back(endButton);
-	menuButton = new MenuButton(325, 350, 100, 50, app->getTexture(app->loadBText), app, onHitMenuButton);
+	menuButton = new MenuButton(500, 350, 100, 50, app->getTexture(app->menuBText), app, onHitMenuButton);
 	objects_.push_back(menuButton);
 }
 

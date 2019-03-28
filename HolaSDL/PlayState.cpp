@@ -117,7 +117,7 @@ void PlayState::pierdeVida()
 {
 	if (vidas == 1 ) {
 		cout << "Has perdido!" << endl;
-		//app->getStateMachine()->changeState(new EndState(app));
+		app->getStateMachine()->changeState(new EndState(app));
 	}
 	vidas--;
 }
@@ -129,7 +129,7 @@ void PlayState::ganaVida()
 
 void PlayState::pasaNivel()
 {
-	if (nivelActual < 3 ) {
+	if (nivelActual < 2) {
 		ball->setIni();
 		nivelActual++;
 		removeGameObject(blocksmap);
@@ -138,13 +138,12 @@ void PlayState::pasaNivel()
 		objects_.push_back(blocksmap);
 	}
 	else {
-		cout << "Ganaste!";
-		//app->getStateMachine()->changeState(new EndState(app));
+		app->getStateMachine()->changeState(new EndState(app));
 	}
 }
 void PlayState::levelAcabado()
 {
-	if (blocksmap->getBloques() == 0 && nivelActual < 3) {
+	if (blocksmap->getBloques() == 0 && nivelActual < 2) {
 		ball->setIni();
 		nivelActual++;
 		removeGameObject(blocksmap);
@@ -152,9 +151,8 @@ void PlayState::levelAcabado()
 		blocksmap->LeerFichero(nivelesJuego[nivelActual], false);
 		objects_.push_back(blocksmap);
 	}
-	else {
-		cout << "Ganaste!";
-		//app->getStateMachine()->changeState(new EndState(app));
+	else if( nivelActual == 2){
+		app->getStateMachine()->changeState(new EndState(app));
 	}
 }
 void PlayState::alargarPaddle()
