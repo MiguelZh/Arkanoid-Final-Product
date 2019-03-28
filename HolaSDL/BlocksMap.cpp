@@ -118,7 +118,7 @@ void BlocksMap::LeerFichero(string filename, bool load) {
 	if (!lectura.is_open()) throw "No existe el fichero";
 	int aux;
 	if (load == true) {
-		for (int i = 0; i < 24; i++) {
+		for (int i = 0; i < 26; i++) {
 
 			lectura >> aux;
 		}

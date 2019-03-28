@@ -1,7 +1,4 @@
 #include "EndState.h"
-#include "SDLApplication.h"
-
-
 EndState::EndState(SDLApplication * app) : GameState(app)
 {
 	endButton = new MenuButton(200, 350, 100, 50, app->getTexture(app->quitBText), app, onHitEndButton);

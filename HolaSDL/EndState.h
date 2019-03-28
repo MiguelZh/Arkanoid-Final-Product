@@ -2,6 +2,7 @@
 #include "MenuButton.h"
 #include "GameState.h"
 #include "MainMenuState.h"
+#include "SDLApplication.h"
 class EndState : public GameState
 {
 protected:

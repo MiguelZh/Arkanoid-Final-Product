@@ -8,7 +8,7 @@ PlayState::PlayState(SDLApplication* app) : GameState(app)
 	wallTop = new Wall(WIN_WIDTH + 30, 15, Vector2D(-15, 0), app->getTexture(app->upperWallText), "Top");
 	wallDer = new Wall(15, WIN_HEIGHT, Vector2D(WIN_WIDTH - 15, 0), app->getTexture(app->sideWallText), "Right");
 	wallIzq = new Wall(15, WIN_HEIGHT, Vector2D(0, 0), app->getTexture(app->sideWallText), "Left");
-	ball = new Ball(20, 20, Vector2D(400, 500), app->getTexture(app->ballText), { 0, -3 }, this);
+	ball = new Ball(20, 20, Vector2D(400, 400), app->getTexture(app->ballText), { 0.5, -3 }, this);
 	paddle = new Paddle(75, 15, Vector2D(270, 550), app->getTexture(app->paddleText), {0,0});
 	blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
 	blocksmap->LeerFichero(nivelesJuego[nivelActual], false);
@@ -21,22 +21,40 @@ PlayState::PlayState(SDLApplication * app, string filename) : GameState(app)
 	file.open("..\\saves\\" + filename + ".txt");
 	blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
 	blocksmap->LeerFichero("..\\saves\\" + filename + ".txt", true);
-	int a, b;
-	file >> a; file >> b;
-	ballIniVel = { (double)a ,(double)b };
-	file >> a; file >> b;
-	int c, d; file >> c; file >> d;
-	paddle = new Paddle(c, d, { (double)a,(double)b }, app->getTexture(app->paddleText), ballIniVel);
-	file >> a; file >> b;
-	ballIniVel = { (double)a ,(double)b };
-	file >> a; file >> b;
-	file >> c; file >> d;
-	ball = new Ball(20, 20, { (double)d,(double)c }, app->getTexture(app->ballText), ballIniVel, this);
-	wallTop = new Wall(WIN_WIDTH + 30, 15, Vector2D(-15, 0), app->getTexture(app->upperWallText), "Top");
-	wallDer = new Wall(15, WIN_HEIGHT, Vector2D(WIN_WIDTH - 15, 0), app->getTexture(app->sideWallText), "Right");
-	wallIzq = new Wall(15, WIN_HEIGHT, Vector2D(0, 0), app->getTexture(app->sideWallText), "Left");
-	file.close();
+	float x, y, w, h, vx, vy, color;
+
+	file >> vidas;
+	file >> nivelActual;
+
+	double velX, velY; // cogeran valor de vel
+	double posX, posY; // cogeran pos
+	double objectW, objectH; // medidas
+	file >> velX >> velY >> posX >> posY >> objectW >> objectH;
+	paddle = new Paddle(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->paddleText), { velX,velY });
+	file >> velX >> velY >> posX >> posY >> objectW >> objectH;
+	ball = new Ball(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->ballText), { velX, velY }, this);
+	file >> posX >> posY >> objectW >> objectH;
+	wallTop = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->upperWallText), "Top");
+	file >> posX >> posY >> objectW >> objectH;
+	wallIzq = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->sideWallText), "Left");
+	file >> posX >> posY >> objectW >> objectH;
+	wallDer = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->sideWallText), "Right");
 	rellenaLista();
+
+	file >> velX >> velY;
+	for (int i = 0; i < velX*velY; i++) {
+		file >> posX;
+	}
+	while (file.peek() != EOF) {
+		file >> velX >> velY >> posX >> posY >> objectW >> objectH;
+		srand((unsigned)time(0));
+		int i= std::rand() / ((RAND_MAX + 1u) / 4);
+		reward = new Reward(objectW, objectH, { posX, posY }, app->getTexture(app->rewardText), Vector2D(velX, velY), i, this, paddle);
+		objects_.push_back(reward);
+		reward = nullptr;
+	}
+	
+	file.close();
 }
 
 
@@ -51,19 +69,24 @@ PlayState::~PlayState()
 void PlayState::rellenaLista()
 {
 	//objetos iniciales
+	objects_.push_back(paddle);
+	objects_.push_back(ball);
 	objects_.push_back(wallTop);
 	objects_.push_back(wallDer);
 	objects_.push_back(wallIzq);
-	objects_.push_back(ball);
-	objects_.push_back(paddle);
 	objects_.push_back(blocksmap);
 }
 
 
 void PlayState::update()
 {
-	GameState::update();
 	levelAcabado();
+	if (!gameOver) {
+		GameState::update();
+	}
+	else if (gameOver) {
+		app->getStateMachine()->changeState(new EndState(app));
+	}
 }
 
 bool PlayState::handleEvents(SDL_Event & e)
@@ -115,11 +138,10 @@ void PlayState::destruyeReward(Reward * r)
 
 void PlayState::pierdeVida()
 {
-	if (vidas == 1 ) {
-		cout << "Has perdido!" << endl;
-		app->getStateMachine()->changeState(new EndState(app));
-	}
 	vidas--;
+	if (vidas == 0) {
+		gameOver = true;
+	}
 }
 
 void PlayState::ganaVida()
@@ -138,7 +160,7 @@ void PlayState::pasaNivel()
 		objects_.push_back(blocksmap);
 	}
 	else {
-		app->getStateMachine()->changeState(new EndState(app));
+		gameOver = true;
 	}
 }
 void PlayState::levelAcabado()
@@ -151,8 +173,8 @@ void PlayState::levelAcabado()
 		blocksmap->LeerFichero(nivelesJuego[nivelActual], false);
 		objects_.push_back(blocksmap);
 	}
-	else if( nivelActual == 2){
-		app->getStateMachine()->changeState(new EndState(app));
+	else if( nivelActual == 3){
+		gameOver = true;
 	}
 }
 void PlayState::alargarPaddle()
@@ -185,16 +207,18 @@ void PlayState::addPoints()
 
 void PlayState::saveGame()
 {
-	system("cls");
-	cout << "Escribe el nombre del archivo: " << endl;
-	string nombre;
-	cin >> nombre;
-	string filename = "..\\saves\\" + nombre + ".txt";
-	ofstream file(filename, ofstream::trunc); // borra todo lo que ya este guardado, si existe un archivo igual
-	// tamaño paddle, bola,walltop,wallder,wallizq,mapa
-	for (auto *n : objects_) {
-		ArkanoidObject * object = static_cast<ArkanoidObject*>(n);
-		object->saveToFile(file);
+	cout << "Escribe el nombre del fichero donde guardar la partida:" << endl;
+	string filename;
+	cin >> filename;
+	filename = "..\\saves\\" + filename + ".txt";
+
+	ofstream outfile(filename, ofstream::trunc);
+	outfile << vidas << " ";
+	outfile << nivelActual << endl;
+	for (auto object : objects_)
+	{
+		ArkanoidObject* a = static_cast<ArkanoidObject*>(object);
+		a->saveToFile(outfile);
 	}
-	file.close();
+	outfile.close();
 }
