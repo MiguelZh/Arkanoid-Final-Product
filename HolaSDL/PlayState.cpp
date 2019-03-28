@@ -19,41 +19,47 @@ PlayState::PlayState(SDLApplication * app, string filename) : GameState(app)
 {
 	ifstream file;
 	file.open("..\\saves\\" + filename + ".txt");
-	blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
-	blocksmap->LeerFichero("..\\saves\\" + filename + ".txt", true);
-	float x, y, w, h, vx, vy, color;
 
-	file >> vidas;
-	file >> nivelActual;
-
-	double velX, velY; // cogeran valor de vel
-	double posX, posY; // cogeran pos
-	double objectW, objectH; // medidas
-	file >> velX >> velY >> posX >> posY >> objectW >> objectH;
-	paddle = new Paddle(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->paddleText), { velX,velY });
-	file >> velX >> velY >> posX >> posY >> objectW >> objectH;
-	ball = new Ball(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->ballText), { velX, velY }, this);
-	file >> posX >> posY >> objectW >> objectH;
-	wallTop = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->upperWallText), "Top");
-	file >> posX >> posY >> objectW >> objectH;
-	wallIzq = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->sideWallText), "Left");
-	file >> posX >> posY >> objectW >> objectH;
-	wallDer = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->sideWallText), "Right");
-	rellenaLista();
-
-	file >> velX >> velY;
-	for (int i = 0; i < velX*velY; i++) {
-		file >> posX;
+	if (file.fail()) {
+		cout << "Error cargando el archivo " << filename << endl;
+		throw new FileFormatError(filename);
 	}
-	while (file.peek() != EOF) {
+	else {
+		blocksmap = new BlocksMap(WIN_WIDTH, WIN_HEIGHT, app->getTexture(app->blocksText));
+		blocksmap->LeerFichero("..\\saves\\" + filename + ".txt", true);
+		float x, y, w, h, vx, vy, color;
+
+		file >> vidas;
+		file >> nivelActual;
+
+		double velX, velY; // cogeran valor de vel
+		double posX, posY; // cogeran pos
+		double objectW, objectH; // medidas
 		file >> velX >> velY >> posX >> posY >> objectW >> objectH;
-		srand((unsigned)time(0));
-		int i= std::rand() / ((RAND_MAX + 1u) / 4);
-		reward = new Reward(objectW, objectH, { posX, posY }, app->getTexture(app->rewardText), Vector2D(velX, velY), i, this, paddle);
-		objects_.push_back(reward);
-		reward = nullptr;
+		paddle = new Paddle(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->paddleText), { velX,velY });
+		file >> velX >> velY >> posX >> posY >> objectW >> objectH;
+		ball = new Ball(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->ballText), { velX, velY }, this);
+		file >> posX >> posY >> objectW >> objectH;
+		wallTop = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->upperWallText), "Top");
+		file >> posX >> posY >> objectW >> objectH;
+		wallIzq = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->sideWallText), "Left");
+		file >> posX >> posY >> objectW >> objectH;
+		wallDer = new Wall(objectW, objectH, Vector2D(posX, posY), app->getTexture(app->sideWallText), "Right");
+		rellenaLista();
+
+		file >> velX >> velY;
+		for (int i = 0; i < velX*velY; i++) {
+			file >> posX;
+		}
+		while (file.peek() != EOF) {
+			file >> velX >> velY >> posX >> posY >> objectW >> objectH;
+			srand((unsigned)time(0));
+			int i = rand() % 4;
+			reward = new Reward(objectW, objectH, { posX, posY }, app->getTexture(app->rewardText), Vector2D(velX, velY), i, this, paddle);
+			objects_.push_back(reward);
+			reward = nullptr;
+		}
 	}
-	
 	file.close();
 }
 

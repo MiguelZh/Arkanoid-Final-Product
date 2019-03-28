@@ -8,6 +8,8 @@
 #include "PauseState.h"
 #include "BlocksMap.h"
 #include "Reward.h"
+#include "FileFormatError.h"
+#include "FileNotFoundError.h"
 using namespace std;
 class PlayState : public GameState
 {

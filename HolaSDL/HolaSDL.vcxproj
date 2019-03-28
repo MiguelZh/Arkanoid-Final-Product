@@ -95,6 +95,8 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlocksMap.h" />
     <ClInclude Include="EndState.h" />
+    <ClInclude Include="FileFormatError.h" />
+    <ClInclude Include="FileNotFoundError.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameStateMachine.h" />
